@@ -1,0 +1,75 @@
+#pragma GCC optimization("Ofast")
+#include <bits/stdc++.h>
+using namespace std;
+#define int long long
+const int MAXn=1e6+5;
+int l,r;
+int res=0;
+bool check[2500000];
+int prime[MAXn];
+void sieve()
+{
+    for(int i=1; i<=MAXn; i++)
+        prime[i]=i;
+    for(int i=4; i<=MAXn; i+=2)
+        prime[i]=2;
+    for(int i=3; i<=sqrt(MAXn); i++)
+    {
+        if(prime[i]==i)
+        {
+            for(int j=i*i; j<=MAXn; j+=i)
+            {
+                if(prime[j]==j)
+                    prime[j]=i;
+            }
+        }
+    }
+}
+int tong(int n)
+{
+    if(prime[n]==n)
+        return  1  ;
+    int res=1;
+    int temp=prime[n],so=prime[n];
+    int n1=n;
+    n/=prime[n];
+    while(n!=1)
+    {
+        //cout << temp << " ";
+        if(so==prime[n])
+        {
+            temp*=so;
+        }
+        else if(temp!=prime[n])
+        {
+            res*=(temp*so-1)/(so-1);
+            temp=prime[n];
+            so=prime[n];
+        }
+
+        n/=prime[n];
+    }
+    if(temp!=1)
+        return res*(temp*so-1)/(so-1)-n1;
+    return res-n1;
+}
+main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+    sieve();
+    cin >> l >> r;
+    for(int i=l; i<=r; i++)
+    {
+        int temp=tong(i);
+        if(temp>=l&&temp<=r&&tong(temp)==i&&check[temp]==false)
+        {
+            res++;
+            check[i]=true;
+            //cout << temp << " " << i<< "\n";
+        }
+    }
+
+    cout << res;
+}
